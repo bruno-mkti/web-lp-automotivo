@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PJCKQ2N9');</script>
+<!-- End Google Tag Manager -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GWM Haval H6 Híbrido — Agende seu test-drive</title>
@@ -238,25 +245,12 @@
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PJCKQ2N9');</script>
-<!-- End Google Tag Manager -->
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-W1ZZTLBZBJ"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-W1ZZTLBZBJ');
-</script>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PJCKQ2N9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <header>
   <div class="wrap navrow">
@@ -467,6 +461,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <script>
   (function () {
+    // Webhook do Make — cada envio aqui vira uma linha na planilha "Leads - GWM Test Drive".
+    var MAKE_WEBHOOK_URL = 'https://hook.us1.make.com/eafr64dvudedx8d5nlg2dewdqs0cfbnf';
+
+    function sendLead(payload) {
+      // mode: 'no-cors' porque não precisamos ler a resposta, só garantir o envio.
+      return fetch(MAKE_WEBHOOK_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    }
+
     function validate(input, wrapper) {
       var valid = input.checkValidity() && input.value.trim().length > 0;
       wrapper.classList.toggle('invalid', !valid);
@@ -476,6 +483,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     var name = document.getElementById('name');
     var phone = document.getElementById('phone');
     var email = document.getElementById('email');
+    var cidade = document.getElementById('cidade');
     var nameField = document.getElementById('nameField');
     var phoneField = document.getElementById('phoneField');
     var emailField = document.getElementById('emailField');
@@ -488,6 +496,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       var ok2 = validate(phone, phoneField);
       var ok3 = validate(email, emailField);
       if (ok1 && ok2 && ok3) {
+        sendLead({
+          name: name.value.trim(),
+          phone: phone.value.trim(),
+          email: email.value.trim(),
+          city: cidade.value || 'Não informada',
+          source: 'Formulário principal — Hero'
+        });
         formBody.classList.add('hide');
         successMsg.classList.add('show');
       }
@@ -505,6 +520,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     finalForm.addEventListener('submit', function (e) {
       e.preventDefault();
       if (finalPhone.checkValidity() && finalPhone.value.trim()) {
+        sendLead({
+          name: 'Não informado',
+          phone: finalPhone.value.trim(),
+          email: 'Não informado',
+          city: 'Não informada',
+          source: 'Formulário final — CTA de rodapé'
+        });
         finalMsg.classList.add('show');
         finalForm.style.opacity = '0.5';
         finalForm.style.pointerEvents = 'none';
@@ -512,10 +534,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     });
   })();
 </script>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PJCKQ2N9"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
 
 </body>
 </html>
